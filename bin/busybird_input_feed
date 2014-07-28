@@ -9,7 +9,7 @@ use Pod::Usage;
 my $post_url;
 my $needs_help;
 GetOptions(
-    'p|post' => \$post_url,
+    'p|post=s' => \$post_url,
     'h|help' => \$needs_help
 );
 

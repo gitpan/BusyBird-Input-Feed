@@ -1,5 +1,10 @@
 Revision history for BusyBird-Input-Feed
 
+0.02    2014-07-28
+        [BUG FIX]
+        - Fix -p option of busybird_input_feed.
+          It did not take the argument, silly.
+
 0.01    2014-07-28
         First version, released on an unsuspecting world.
 

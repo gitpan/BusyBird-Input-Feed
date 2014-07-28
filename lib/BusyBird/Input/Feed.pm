@@ -10,7 +10,7 @@ use Carp;
 use WWW::Favicon ();
 use LWP::UserAgent;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 our @CARP_NOT = qw(Try::Tiny XML::FeedPP);
 
