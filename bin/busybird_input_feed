@@ -43,7 +43,7 @@ busybird_input_feed - command-line tool to import RSS/Atom feeds into BusyBird
     $ busybird_input_feed < feed.rss
     
     ## Download a feed and post statuses to the BusyBird URL
-    $ busybird_input_feed 'http://example.com/feed.rss' -p 'http://mybusybird.com/timelines/home/statuses.json'
+    $ busybird_input_feed 'http://example.com/feed.rss' -p 'http://localhost:5000/timelines/home/statuses.json'
 
 =head1 DESCRIPTION
 

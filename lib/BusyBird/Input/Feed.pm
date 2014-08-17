@@ -10,7 +10,7 @@ use Carp;
 use WWW::Favicon ();
 use LWP::UserAgent;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 our @CARP_NOT = qw(Try::Tiny XML::FeedPP);
 
@@ -27,7 +27,10 @@ sub new {
             $ua;
         }
     }, $class;
+
+    ## Note that WWW::Favicon#ua accessor method is not documented (as of version 0.03001)
     $self->{favicon_detector}->ua($self->{user_agent});
+    
     return $self;
 }
 

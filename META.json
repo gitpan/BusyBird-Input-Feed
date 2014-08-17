@@ -25,16 +25,10 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "Module::Build::Pluggable::CPANfile" : "0.05"
-         }
-      },
       "configure" : {
          "requires" : {
             "Module::Build" : "0.42",
-            "Module::Build::Pluggable" : "0.09",
-            "Module::Build::Pluggable::CPANfile" : "0.05"
+            "Module::Build::Prereqs::FromCPANfile" : "0.02"
          }
       },
       "runtime" : {
@@ -69,5 +63,5 @@
          "web" : "https://github.com/debug-ito/BusyBird-Input-Feed"
       }
    },
-   "version" : "0.02"
+   "version" : "0.03"
 }
