@@ -8,8 +8,10 @@ use Pod::Usage;
 
 my $post_url;
 my $needs_help;
+my $level;
 GetOptions(
     'p|post=s' => \$post_url,
+    'l|level=i' => \$level,
     'h|help' => \$needs_help
 );
 
@@ -21,7 +23,8 @@ if($needs_help) {
 my $feed_url = shift @ARGV;
 BusyBird::Input::Feed::Run->run(
     download_url => $feed_url,
-    post_url => $post_url
+    post_url => $post_url,
+    level => $level,
 );
 
 __END__
@@ -60,6 +63,11 @@ If C<URL> argument is set, the feed is downloaded from that URL.
 
 If set, the L<BusyBird> statuses are sent to the specified URL by HTTP POST method.
 Usually, this is the post endpoint of L<BusyBird>. See L<BusyBird::Manual::WebAPI> for detail.
+
+=item -l, --level LEVEL
+
+If set, it sets the statuses' levels to the specified C<LEVEL>.
+C<LEVEL> must be an integer.
 
 =item -h, --help
 

@@ -37,6 +37,16 @@ my $run_cmd = "perl -Ilib $FindBin::RealBin/../bin/busybird_input_feed";
 }
 
 {
+    note("--- STDIN -> STDOUT (level)");
+    my $output = `$run_cmd -l 5 < '$FindBin::RealBin/../t/samples/stackoverflow.atom'`;
+    my $got = decode_json($output);
+    cmp_ok scalar(@$got), ">", 0, "get at least 1 status";
+    foreach my $s (@$got) {
+        is $s->{busybird}{level}, 5, "level set to 5";
+    }
+}
+
+{
     note("--- URL -> STDOUT");
     my $output = `$run_cmd 'http://rss.slashdot.org/Slashdot/slashdot'`;
     check_output $output;
@@ -63,56 +73,6 @@ my $run_cmd = "perl -Ilib $FindBin::RealBin/../bin/busybird_input_feed";
     ok defined($output), "output is captured";
     check_output $output;
 }
-
-
-## 
-## 
-## sub run_child {
-##     my ($input_pipe, $output_pipe) = @_;
-##     $input_pipe->reader;
-##     $ouptut_pipe->writer;
-##     close STDIN;
-##     close STDOUT;
-##     open STDIN, '<&=', $input_pipe->fileno or die "Cannot re-open STDIN";
-##     open STDOUT, '>&=', $output_pipe->fileno or die "Cannot re-open STDOUT";
-##     BusyBird::Input::Feed::Run->run();
-## }
-## 
-## sub fork_child {
-##     my $input_to_child = IO::Pipe->new;
-##     my $output_from_child = IO::Pipe->new;
-## 
-##     my $child_pid = fork();
-##     if(!defined($child_pid)) {
-##         die "fork() failed. Abort.";
-##     }elsif(!$child_pid) {
-##         ## child
-##         run_child($input_to_child, $output_from_child);
-##         exit;
-##     }
-##     ## parent
-##     $input_to_child->writer;
-##     $output_from_child->reader;
-##     return ($child_pid, $input_to_child, $output_from_child);
-## }
-## 
-## my $input_feed = do {
-##     my $filename = "t/samples/stackoverflow.atom";
-##     open my $file, "<", $filename or die "Cannot open $filename: $!";
-##     local $/;
-##     <$file>;
-## };
-## 
-## my ($child_pid, $writer, $reader) = fork_child;
-## $writer->print($input_feed);
-## $writer->close;
-## my $got_statuses_json = <$reader>;
-## waitpid $child_pid, 0;
-## my $got_statuses = JSON->new->utf8->decode($got_statuses_json);
-## 
-## is scalar(@$got_statuses), 30, "30 statuses OK";
-## is $got_statuses->[0]{id}, '1404624785|http://stackoverflow.com/q/24593005', "[0]{id} OK";
-
 
 done_testing;
 

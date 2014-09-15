@@ -9,8 +9,9 @@ use Try::Tiny;
 use Carp;
 use WWW::Favicon ();
 use LWP::UserAgent;
+use URI;
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 our @CARP_NOT = qw(Try::Tiny XML::FeedPP);
 
@@ -25,13 +26,56 @@ sub new {
             $ua->timeout(30);
             $ua->agent("BusyBird::Inpu::Feed-$VERSION");  ## some Web sites ban LWP::UserAgent's default UserAgent...
             $ua;
-        }
+        },
+        image_max_num => defined($args{image_max_num}) ? $args{image_max_num} : 3,
     }, $class;
 
     ## Note that WWW::Favicon#ua accessor method is not documented (as of version 0.03001)
     $self->{favicon_detector}->ua($self->{user_agent});
     
     return $self;
+}
+
+sub _get_url_head_and_dir {
+    my ($url_raw) = @_;
+    return (undef, undef) if not defined $url_raw;
+    my $url = URI->new($url_raw);
+    my $scheme = $url->scheme;
+    my $authority = $url->authority;
+    return (undef, undef) if !$scheme || !$authority;
+    my $url_head = "$scheme://$authority";
+    my $url_dir;
+    my $path = $url->path;
+    if($path =~ m{^(.*/)}i) {
+        $url_dir = $1;
+    }else {
+        $url_dir = "/";
+    }
+    return ($url_head, $url_dir);
+}
+
+sub _extract_image_urls {
+    my ($self, $feed_item) = @_;
+    return () if $self->{image_max_num} == 0;
+    my $content = $feed_item->description;
+    return () if !defined($content);
+    my ($url_head, $url_dir) = _get_url_head_and_dir($feed_item->link);
+    my @urls = ();
+    while(($self->{image_max_num} < 0 || @urls < $self->{image_max_num})
+          && $content =~ m{<\s*img\s+[^>]*src\s*=\s*(['"])([^>]+?)\1[^>]*>}ig) {
+        my $url = URI->new($2);
+        if(!$url->scheme) {
+            ## Only "path" segment is in the src attribute.
+            next if !defined($url_head) || !defined($url_dir);
+            if(substr("$url", 0, 1) eq "/") {
+                $url = "$url_head$url";
+            }else {
+                $url = "$url_head$url_dir$url";
+            }
+        }
+        push @urls, "$url";
+    }
+    return @urls;
 }
 
 sub _get_home_url {
@@ -93,6 +137,10 @@ sub _make_status_from_item {
         $status->{id} = $created_at_dt->epoch . '|' . $item_id;
     }elsif(defined($item_id)) {
         $status->{id} = $item_id;
+    }
+    my @image_urls = $self->_extract_image_urls($feed_item);
+    if(@image_urls) {
+        $status->{extended_entities}{media} = [map { +{ media_url => $_, indices => [0,0] } } @image_urls];
     }
     return $status;
 }
@@ -189,6 +237,16 @@ If it's defined and false, it won't use favicon.
 =item C<user_agent> => L<LWP::UserAgent> object (optional)
 
 L<LWP::UserAgent> object for fetching documents.
+
+=item C<image_max_num> => INT (optional, default: 3)
+
+The maximum number of image URLs extracted from the feed item.
+
+If set to 0, it extracts no images. If set to a negative value, it extracts all image URLs from the feed item.
+
+The extracted image URLs are stored as Twitter Entities in the status's C<extended_entities> field,
+so that L<BusyBird> will render them.
+See L<BusyBird::Manual::Config/extended_entities> for detail.
 
 =back
 

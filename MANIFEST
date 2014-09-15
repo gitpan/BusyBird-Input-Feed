@@ -8,15 +8,18 @@ lib/BusyBird/Input/Feed/Run.pm
 MANIFEST			This list of files
 README
 t/00-load.t
+t/images.t
 t/invalid.t
 t/samples.t
 t/samples/googlejp.atom
+t/samples/img_paths.rss
 t/samples/nick.rss
 t/samples/pukiwiki_rss09.rss
 t/samples/rtcpan.rdf
 t/samples/slashdot.rss
 t/samples/slashdotjp.rdf
 t/samples/stackoverflow.atom
+t/samples/turner_press.rss
 xt/favicon.t
 xt/manifest.t
 xt/pod.t

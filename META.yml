@@ -33,9 +33,10 @@ requires:
   JSON: '0'
   LWP::UserAgent: '0'
   Try::Tiny: '0'
+  URI: '0'
   WWW::Favicon: '0'
   XML::FeedPP: '0'
 resources:
   bugtracker: https://github.com/debug-ito/BusyBird-Input-Feed/issues
   repository: git://github.com/debug-ito/BusyBird-Input-Feed.git
-version: '0.03'
+version: '0.04'

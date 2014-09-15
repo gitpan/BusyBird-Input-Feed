@@ -8,6 +8,7 @@ requires 'WWW::Favicon' => '0';
 requires 'LWP::UserAgent' => '0';
 requires 'Carp' => '0';
 requires 'JSON' => '0';
+requires 'URI';
 
 on 'test' => sub {
     requires 'Test::More' => "0";

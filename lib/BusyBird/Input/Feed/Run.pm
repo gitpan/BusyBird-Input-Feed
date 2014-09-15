@@ -11,11 +11,18 @@ sub run {
     my $download_url = $opts{download_url};
     my $post_url = $opts{post_url};
     my $user_agent = $opts{user_agent};
+    my $level = $opts{level};
     my $input = BusyBird::Input::Feed->new(
         defined($user_agent) ? (user_agent => $user_agent) : ()
     );
     my $json = JSON->new->utf8->ascii;
-    my $statuses_json = $json->encode(_parse_feed($input, $download_url)) . "\n";
+    my $statuses = _parse_feed($input, $download_url);
+    if(defined($level)) {
+        foreach my $s (@$statuses) {
+            $s->{busybird}{level} = $level;
+        }
+    }
+    my $statuses_json = $json->encode($statuses) . "\n";
     _post_statuses(\$statuses_json, $post_url, $user_agent);
 }
 
