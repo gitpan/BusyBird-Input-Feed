@@ -1,5 +1,8 @@
 Revision history for BusyBird-Input-Feed
 
+0.05    2014-09-15
+        - Fix documentation. No changes to the code.
+
 0.04    2014-09-15
         [ENHANCEMENT]
         - Now it extracts image URLs from feed items.

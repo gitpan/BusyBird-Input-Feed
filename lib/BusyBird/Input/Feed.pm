@@ -11,7 +11,7 @@ use WWW::Favicon ();
 use LWP::UserAgent;
 use URI;
 
-our $VERSION = "0.04";
+our $VERSION = "0.05";
 
 our @CARP_NOT = qw(Try::Tiny XML::FeedPP);
 
@@ -246,7 +246,7 @@ If set to 0, it extracts no images. If set to a negative value, it extracts all 
 
 The extracted image URLs are stored as Twitter Entities in the status's C<extended_entities> field,
 so that L<BusyBird> will render them.
-See L<BusyBird::Manual::Config/extended_entities> for detail.
+See L<BusyBird::Manual::Status/extended_entities.media> for detail.
 
 =back
 
